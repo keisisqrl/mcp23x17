@@ -15,10 +15,10 @@ defmodule Mcp23x17.Utils do
 
   ## Examples
   
-  iex> Mcp23x17.base_addr(3)
+  iex> Mcp23x17.Utils.base_addr(3)
   35
-  iex> Mcp23x17.base_addr(8)
-  ** (FunctionClauseError) no function clause matching in Mcp23x17.base_addr/1
+  iex> Mcp23x17.Utils.base_addr(8)
+  ** (FunctionClauseError) no function clause matching in Mcp23x17.Utils.base_addr/1
   """
   @spec base_addr(integer) :: integer
   def base_addr(addr_pins) when addr_pins >= 0 and addr_pins < 8 do
@@ -34,10 +34,10 @@ defmodule Mcp23x17.Utils do
 
   ## Examples
 
-  iex> Mcp23x17.send_addr(35)
+  iex> Mcp23x17.Utils.send_addr(35)
   70
-  iex> Mcp23x17.send_addr(40)
-  ** (FunctionClauseError) no function clause matching in Mcp23x17.send_addr/1
+  iex> Mcp23x17.Utils.send_addr(40)
+  ** (FunctionClauseError) no function clause matching in Mcp23x17.Utils.send_addr/1
   """
   @spec send_addr(integer) :: integer
   def send_addr(addr) when valid_addr?(addr) do
@@ -51,10 +51,10 @@ defmodule Mcp23x17.Utils do
 
   ## Examples
 
-  iex> Mcp23x17.read_addr(35)
+  iex> Mcp23x17.Utils.read_addr(35)
   71
-  iex> Mcp23x17.read_addr(40)
-  ** (FunctionClauseError) no function clause matching in Mcp23x17.read_addr/1
+  iex> Mcp23x17.Utils.read_addr(40)
+  ** (FunctionClauseError) no function clause matching in Mcp23x17.Utils.read_addr/1
   """
   @spec read_addr(integer) :: integer
   def read_addr(addr) when valid_addr?(addr) do
@@ -68,7 +68,7 @@ defmodule Mcp23x17.Utils do
 
   ## Examples
 
-  iex> Mcp23x17.init_config()
+  iex> Mcp23x17.Utils.init_config()
   <<0x0B::8,4::4,8::4,255::8,255::8>>
   """
   @spec init_config() :: <<_::32>>
@@ -88,6 +88,13 @@ defmodule Mcp23x17.Utils do
     >>
   end
 
+  @doc """
+  Address of INTFA for PORTA.
+
+  iex> Mcp23x17.Utils.intfa
+  <<0x0e::8>>
+  """
+  @spec intfa() :: <<_::8>>
   def intfa do
     << 0x0e::8 >>
   end
