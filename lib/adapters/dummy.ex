@@ -3,12 +3,12 @@ defmodule Mcp23x17.Adapters.Dummy do
   Dummy adapter for testing.
   """
 
-  def write(_driver,_content) do
+  def write(driver,addr,data) do
     :ok
   end
 
-  def read(_driver,_addr,_num) do
-    :ok
+  def read(driver,addr,len) do
+    << 0::size(len) >>
   end
 
 end

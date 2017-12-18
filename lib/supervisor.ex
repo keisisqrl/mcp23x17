@@ -8,7 +8,9 @@ defmodule Mcp23x17.Supervisor do
   def init(_arg) do
     Supervisor.init([
       {Registry,[keys: :unique,name: Mcp23x17.DriverRegistry]},
-      {Registry,[keys: :duplicate,name: Mcp23x17.PinRegistry]},
+      {Registry,[keys: :unique,name: Mcp23x17.PinRegistry]},
+      {Registry,[keys: :duplicate,name: Mcp23x17.PinNotify]},
+      {Registry,[keys: :duplicate, name: Mcp23x17.PinSubscribers]},
       {Mcp23x17.DriverSupervisor,[]},
       {Mcp23x17.PinSupervisor,[]}
     ], strategy: :one_for_all)

@@ -69,9 +69,9 @@ defmodule Mcp23x17.Utils do
   ## Examples
 
   iex> Mcp23x17.Utils.init_config()
-  <<0x0B::8,4::4,8::4,255::8,255::8>>
+  <<0x0B::8,4::4,8::4>>
   """
-  @spec init_config() :: <<_::32>>
+  @spec init_config() :: <<_::16>>
   def init_config do
     <<
     0x0B::8, # Register address: IOCON, PORTB, BANK=0
@@ -83,8 +83,6 @@ defmodule Mcp23x17.Utils do
     0::1, # ODR: Active-driver interrupt output
     0::1, # INTPOL: interrupt output active-low
     0::1, # Empty bit
-    255::8, # GPPU, PORTA (pull-up enable)
-    255::8 # GPPU, PORTB (pull-up enable)
     >>
   end
 
@@ -98,4 +96,16 @@ defmodule Mcp23x17.Utils do
   def intfa do
     << 0x0e::8 >>
   end
+
+  @doc """
+  Address of IODIR for PORTA.
+
+  iex> Mcp23x17.Utils.iodir
+  <<0x00::8>>
+  """
+  @spec iodir() :: <<_::8>>
+  def iodir do
+    << 0x00::8 >>
+  end
+  
 end
