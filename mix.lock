@@ -1,0 +1,3 @@
+%{"dialyxir": {:hex, :dialyxir, "0.5.1", "b331b091720fd93e878137add264bac4f644e1ddae07a70bf7062c7862c4b952", [:mix], []},
+  "elixir_ale": {:hex, :elixir_ale, "1.0.1", "2066e467e929c589a873e94befd08133eff32c20ef79db24904160dbd7ba75df", [:make, :mix], [{:elixir_make, "~> 0.4", [hex: :elixir_make, optional: false]}]},
+  "elixir_make": {:hex, :elixir_make, "0.4.0", "992f38fabe705bb45821a728f20914c554b276838433349d4f2341f7a687cddf", [:mix], []}}
