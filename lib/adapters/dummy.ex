@@ -8,7 +8,8 @@ defmodule Mcp23x17.Adapters.Dummy do
   end
 
   def read(driver,addr,len) do
-    << 0::size(len) >>
+    sz = len * 8
+    << 0::size(sz) >>
   end
 
 end
