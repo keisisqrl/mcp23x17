@@ -45,7 +45,7 @@ defmodule Mcp23x17.Driver do
   
   # Callbacks
 
-  @spec init(__MODULE__.t) :: :ok | {:error, term}
+  @spec init(__MODULE__.t) :: {:ok, __MODULE__.t} | {:stop, term}
   def init(state) do
     case state.adapter.write(state,Utils.iocon,Utils.init_config) do
       :ok ->
