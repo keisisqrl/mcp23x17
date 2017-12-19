@@ -9,6 +9,7 @@ defmodule Mcp23x17.PinTest do
     def read(_,_,4) do
       << 0::4,1::1,0::11,0::4,1::1,0::11 >>
     end
+        
     def read(state,addr,len) do
       Dummy.read(state,addr,len)
     end
@@ -43,5 +44,15 @@ defmodule Mcp23x17.PinTest do
 
     assert_receive {:mcp23x17_interrupt,{35,5},:rising}
   end
+
+  test "write pin status", context do
+    {:ok, out_pin} = Driver.add_pin(context[:drvpid],7,:out)
+
+    assert Pin.write(out_pin, true)
+
+    # need to improve Dummy driver
+    # refute Pin.write(context[:pinpid], false)
+  end
+  
   
 end

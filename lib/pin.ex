@@ -47,6 +47,20 @@ defmodule Mcp23x17.Pin do
    :both] do
     Registry.register(Mcp23x17.PinSubscribers, server, direction)
   end
+
+  @spec write(pid|tuple, 0|1|true|false) :: :ok | {:error, term}
+  def write(server, value) do
+    GenServer.call(server, {:write,
+                            case value do
+                              0 ->
+                                false
+                              false ->
+                                false
+                              _ ->
+                                true
+                            end
+                           })
+  end
   
   
   # Callbacks
@@ -62,13 +76,27 @@ defmodule Mcp23x17.Pin do
     {:ok, state}
   end
 
+  def handle_call({:write, value}, _from, state) do
+    cur_reg = Driver.read(state.driver,Utils.iodir,2)
+    {:reply, if extract_info(state.pin_number,IO.inspect cur_reg) do
+        {:error, "Pin is input"}
+      else
+        Driver.write(state.driver,Utils.iodir,
+          modify_info(state.pin_number,cur_reg,value))
+        :ok
+      end,
+     state
+    }
+  end
+
   # Infos
   
   @spec handle_info({:interrupt,integer,integer},
     __MODULE__.t) :: {:noreply, __MODULE__.t}
   def handle_info({:interrupt,interrupts,pin_states}, state) do
-    if extract_info(state.pin_number, interrupts) do
-      pin_transition = if extract_info(state.pin_number, pin_states) do
+    if extract_info(state.pin_number, << interrupts::16 >>) do
+      pin_transition = if extract_info(
+            state.pin_number, << pin_states::16 >>) do
         :rising
       else
         :falling
@@ -89,11 +117,11 @@ defmodule Mcp23x17.Pin do
 
   # Utilities
   
-  @spec extract_info(integer,integer) :: boolean
+  @spec extract_info(integer,<< _::16 >>) :: boolean
   defp extract_info(pin_number, registers) do
     offset = pin_number - 1
     rem = 16 - pin_number
-    << _::size(offset), retval::1, _::size(rem) >> = << registers::16 >>
+    << _::size(offset), retval::1, _::size(rem) >> = registers 
     case retval do
       1 ->
         true
