@@ -4,6 +4,8 @@ defmodule Mcp23x17.DriverTest do
   alias Mcp23x17.Driver
 
   setup do
+    {:ok, _dummypid} = start_supervised(Mcp23x17.Adapters.Dummy)
+    
     {:ok, pid} = Mcp23x17.init_driver(33,nil,nil, Mcp23x17.Adapters.Dummy)
     on_exit fn ->
       Supervisor.terminate_child(Mcp23x17.DriverSupervisor, pid)
@@ -18,11 +20,11 @@ defmodule Mcp23x17.DriverTest do
   end
 
   test "dummy read", context do
-    assert match?(<<0::16>>, Driver.read(context[:pid],0,2))
+    assert match?(<<_::16>>, Driver.read(context[:pid],<< 0::8 >>,2))
   end
 
   test "dummy write", context do
-    assert Driver.write(context[:pid],0,<< 332::16 >>)
+    assert Driver.write(context[:pid],<< 0::8 >>,<< 332::16 >>)
   end
   
 

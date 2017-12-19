@@ -117,5 +117,16 @@ defmodule Mcp23x17.Utils do
   def iocon do
     << 0x0b::8 >>
   end
+
+  @doc """
+  Address of INTCAPA for PORTA during BANK=0.
+
+  iex> Mcp23x17.Utils.intcapa
+  << 0x10::8 >>
+  """
+  def intcapa do
+    << 0x10::8 >>
+  end
+  
   
 end
