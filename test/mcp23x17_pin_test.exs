@@ -34,6 +34,7 @@ defmodule Mcp23x17.PinTest do
     assert_receive {:mcp23x17_interrupt,{35,5},:rising}
   end
 
+  @tag :write
   test "write pin status", context do
     {:ok, out_pin} = Driver.add_pin(context[:drvpid],7,:out)
 
@@ -41,6 +42,7 @@ defmodule Mcp23x17.PinTest do
 
   end
 
+  @tag :write
   test "refuse to write :in pin", context do
     refute :ok == Pin.write(context[:pinpid], false)
   end
