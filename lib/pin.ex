@@ -51,8 +51,8 @@ defmodule Mcp23x17.Pin do
   
   # Callbacks
 
-  @spec init(__MODULE__.t) :: {:ok,__MODULE__.t}
-  def init(state, direction) do
+  @spec init([atom]) :: {:ok,__MODULE__.t}
+  def init([state, direction]) do
     Registry.register(Mcp23x17.PinNotify,
       state.driver_addr,[])
     cur_reg = Driver.read(state.driver,Utils.iodir,2)
@@ -69,7 +69,7 @@ defmodule Mcp23x17.Pin do
   end
   
 
-  @spec handle_info({:interrupt,<<_::16>>,<<_::16>>},
+  @spec handle_info({:interrupt,integer,integer},
     __MODULE__.t) :: {:noreply, __MODULE__.t}
   def handle_info({:interrupt,interrupts,pin_states}, state) do
     if extract_info(state.pin_number, interrupts) do
@@ -79,30 +79,30 @@ defmodule Mcp23x17.Pin do
         :falling
       end
       Registry.dispatch(Mcp23x17.PinSubscribers,
-        {state.driver_addr,state.pin_number}, fn recipients ->
-        for {pid, subscription} <- recipients do
-          if subscription in [pin_transition, :both] do
-            send(pid, {:mcp23x17_interrupt,
-                       {state.driver_addr, state.pin_number},
-                       pin_transition})
+        self(), fn recipients ->
+          for {pid, subscription} <- recipients do
+            if subscription in [pin_transition, :both] do
+              send(pid, {:mcp23x17_interrupt,
+                         {state.driver_addr, state.pin_number},
+                         pin_transition})
+            end
           end
-        end
-      end)
+        end)
     end
     {:noreply, state}
   end
 
   # Utilities
   
-  @spec extract_info(integer,<<_::16>>) :: boolean
+  @spec extract_info(integer,integer) :: boolean
   defp extract_info(pin_number, registers) do
     offset = pin_number - 1
     rem = 16 - pin_number
-    << _::size(offset), retval::1, _::size(rem) >> = registers
+    << _::size(offset), retval::1, _::size(rem) >> = << registers::16 >>
     case retval do
-      << 1::1 >> ->
+      1 ->
         true
-      << 0::1 >> ->
+      0 ->
         false
     end
   end

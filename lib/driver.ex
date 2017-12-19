@@ -17,7 +17,7 @@ defmodule Mcp23x17.Driver do
   
   # Client
 
-  def start_link(addr, ale_pid, ale_int, adapter, opts \\ []) do
+  def start_link(addr, ale_pid, ale_int, adapter, _opts \\ []) do
     new_state = %__MODULE__{addr: addr,
                         ale_pid: ale_pid,
                         ale_int: ale_int,
@@ -37,7 +37,9 @@ defmodule Mcp23x17.Driver do
   @spec add_pin(GenServer.server,integer,
   Mcp23x17.Pin.pin_direction) :: Supervisor.on_start_child
   def add_pin(server,pin_number,direction) do
-    GenServer.call(server,{:add_pin,pin_number,direction})
+    Supervisor.start_child(
+      Mcp23x17.PinSupervisor, GenServer.call(server,
+        {:add_pin,pin_number,direction}))
   end
   
   
@@ -66,9 +68,7 @@ defmodule Mcp23x17.Driver do
   end
 
   def handle_call({:add_pin, pin_number, direction}, _from, state) do
-    {:reply, Supervisor.start_child(
-        Mcp23x17.PinSupervisor, [self(), pin_number,
-                                 state.addr, direction]), state}
+    {:reply, [self(), pin_number, state.addr, direction], state}
   end
   
   
@@ -84,8 +84,10 @@ defmodule Mcp23x17.Driver do
     << interrupts::16, pin_states::16 >> =
       apply(state.adapter,:read,[state,Utils.intfa,4])
     Registry.dispatch(Mcp23x17.PinNotify,state.addr, fn entries ->
-      for {pid, _} <- entries, do: send(pid,
+      for ({pid, _} <- entries) do
+        send(pid,
             {:interrupt, interrupts, pin_states})
+      end
     end)
     {:noreply, state}
   end
