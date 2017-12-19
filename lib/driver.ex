@@ -18,7 +18,6 @@ defmodule Mcp23x17.Driver do
   # Client
 
   def start_link(addr, ale_pid, ale_int, adapter, opts \\ []) do
-    IEx.pry()
     new_state = %__MODULE__{addr: addr,
                         ale_pid: ale_pid,
                         ale_int: ale_int,
@@ -46,7 +45,7 @@ defmodule Mcp23x17.Driver do
 
   @spec init(__MODULE__.t) :: :ok | {:error, term}
   def init(state) do
-    case apply(state.adapter,:write,[state,Utils.init_config]) do
+    case apply(state.adapter,:write,[state,Utils.iocon,Utils.init_config]) do
       :ok ->
         case :ok do # ElixirALE.GPIO.set_int(ale_int,:falling) do
           :ok ->

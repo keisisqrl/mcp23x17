@@ -69,12 +69,11 @@ defmodule Mcp23x17.Utils do
   ## Examples
 
   iex> Mcp23x17.Utils.init_config()
-  <<0x0B::8,4::4,8::4>>
+  <<4::4,8::4>>
   """
-  @spec init_config() :: <<_::16>>
+  @spec init_config() :: <<_::8>>
   def init_config do
     <<
-    0x0B::8, # Register address: IOCON, PORTB, BANK=0
     0::1, # BANK: interleaved registers
     1::1, # MIRROR: mirror interrupts
     0::1, # SEQOP: sequential
@@ -106,6 +105,17 @@ defmodule Mcp23x17.Utils do
   @spec iodir() :: <<_::8>>
   def iodir do
     << 0x00::8 >>
+  end
+
+  @doc """
+  Address of IOCON for PORTB during BANK=0 (boot).
+
+  iex> Mcp23x17.Utils.iocon
+  << 0x0b::8 >>
+  """
+  @spec iocon() :: <<_::8>>
+  def iocon do
+    << 0x0b::8 >>
   end
   
 end
