@@ -3,8 +3,12 @@ defmodule Mcp23x17.DriverTest do
   doctest Mcp23x17.Driver
   alias Mcp23x17.Driver
 
-  setup_all do
+  setup do
     {:ok, pid} = Mcp23x17.init_driver(33,nil,nil, Mcp23x17.Adapters.Dummy)
+    on_exit fn ->
+      Supervisor.terminate_child(Mcp23x17.DriverSupervisor, pid)
+    end
+    
     {:ok, pid: pid}
   end
 
