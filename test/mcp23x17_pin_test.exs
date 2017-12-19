@@ -37,4 +37,11 @@ defmodule Mcp23x17.PinTest do
     assert_receive {:mcp23x17_interrupt,{35,5},:rising}
   end
   
+  test "sub by addr", context do
+    Pin.set_int({35,5})
+    send(context[:drvpid],{:gpio_interrupt,nil,nil})
+
+    assert_receive {:mcp23x17_interrupt,{35,5},:rising}
+  end
+  
 end

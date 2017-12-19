@@ -62,13 +62,8 @@ defmodule Mcp23x17.Pin do
     {:ok, state}
   end
 
-  @spec handle_call({:get_state}, pid, __MODULE__.t) :: {:reply, __MODULE__.t,
-                                                    __MODULE__.t}
-  def handle_call({:get_state}, _from, state) do
-    {:reply, state, state}
-  end
+  # Infos
   
-
   @spec handle_info({:interrupt,integer,integer},
     __MODULE__.t) :: {:noreply, __MODULE__.t}
   def handle_info({:interrupt,interrupts,pin_states}, state) do
