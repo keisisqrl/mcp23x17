@@ -135,8 +135,9 @@ defmodule Mcp23x17.Pin do
     newval = if val, do: 1, else: 0
     offset = pin_number - 1
     rem = 16 - pin_number
-    << prefix::size(offset), _oldval::1, postfix::size(rem) >> = registers
-    << prefix, newval::1, postfix >>
+    << prefix::bitstring-size(offset),
+      _oldval::bitstring-1, postfix::bitstring-size(rem) >> = registers
+    << prefix::bitstring, newval::1, postfix::bitstring >>
   end
   
   
