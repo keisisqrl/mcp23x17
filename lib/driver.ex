@@ -47,7 +47,7 @@ defmodule Mcp23x17.Driver do
 
   @spec init(__MODULE__.t) :: :ok | {:error, term}
   def init(state) do
-    case apply(state.adapter,:write,[state,Utils.iocon,Utils.init_config]) do
+    case state.adapter.write(state,Utils.iocon,Utils.init_config) do
       :ok ->
         case :ok do # ElixirALE.GPIO.set_int(ale_int,:falling) do
           :ok ->
@@ -64,7 +64,7 @@ defmodule Mcp23x17.Driver do
   # Calls
 
   def handle_call({:read,addr,len},_from,state) do
-    {:reply, apply(state.adapter, :read, [state, addr, len]), state}
+    {:reply, state.adapter.read(state, addr, len), state}
   end
 
   def handle_call({:add_pin, pin_number, direction}, _from, state) do
@@ -75,14 +75,14 @@ defmodule Mcp23x17.Driver do
   # Casts
   
   def handle_cast({:write,addr,data},state) do
-    apply(state.adapter, :write, [state, addr, data])
+    state.adapter.write(state, addr, data)
     {:noreply, state}
   end
   
   
   def handle_info({:gpio_interrupt,_,_}, state) do
     << interrupts::16, pin_states::16 >> =
-      apply(state.adapter,:read,[state,Utils.intfa,4])
+      state.adapter.read(state,Utils.intfa,4)
     Registry.dispatch(Mcp23x17.PinNotify,state.addr, fn entries ->
       for ({pid, _} <- entries) do
         send(pid,
