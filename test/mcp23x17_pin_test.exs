@@ -37,7 +37,7 @@ defmodule Mcp23x17.PinTest do
   test "write pin status", context do
     {:ok, out_pin} = Driver.add_pin(context[:drvpid],7,:out)
 
-    assert Pin.write(out_pin, true)
+    assert :ok == Pin.write(out_pin, true)
 
   end
 
