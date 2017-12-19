@@ -78,7 +78,7 @@ defmodule Mcp23x17.Pin do
 
   def handle_call({:write, value}, _from, state) do
     cur_reg = Driver.read(state.driver,Utils.iodir,2)
-    {:reply, if extract_info(state.pin_number,IO.inspect cur_reg) do
+    {:reply, if extract_info(state.pin_number,cur_reg) do
         {:error, "Pin is input"}
       else
         Driver.write(state.driver,Utils.iodir,
