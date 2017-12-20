@@ -11,7 +11,7 @@ defmodule Mcp23x17 do
   @doc """
   Create a Driver in the supervision tree and return it.
 
-  iex> Mcp23x17.init_driver(33,nil,nil,Mcp23x17.Adapters.Dummy)
+  iex> Mcp23x17.init_driver(33,nil,nil,Mcp23x17.Adapters.Mock)
   {:ok, #Pid<>}
   """
   def init_driver(addr,ale_pid,ale_int,adapter) do

@@ -1,6 +1,6 @@
-defmodule Mcp23x17.Adapters.Dummy do
+defmodule Mcp23x17.Adapters.Mock do
   @moduledoc """
-  Dummy adapter for testing.
+  Mock adapter for testing.
   """
   use Agent
 

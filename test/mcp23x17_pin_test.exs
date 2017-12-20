@@ -10,10 +10,10 @@ defmodule Mcp23x17.PinTest do
   @outpin 7
   
   setup do
-    {:ok, _dummypid} = start_supervised(Mcp23x17.Adapters.Dummy)
+    {:ok, _mockpid} = start_supervised(Mcp23x17.Adapters.Mock)
     
     {:ok, drvpid} = Mcp23x17.init_driver(35, nil, @intpid,
-      Mcp23x17.Adapters.Dummy)
+      Mcp23x17.Adapters.Mock)
     {:ok, pinpid} = Driver.add_pin(drvpid, @inpin, :in)
     {:ok, outpid} = Driver.add_pin(drvpid, @outpin, :out)
     on_exit fn ->
