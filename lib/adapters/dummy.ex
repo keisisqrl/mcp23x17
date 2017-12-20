@@ -13,7 +13,7 @@ defmodule Mcp23x17.Adapters.Dummy do
   @spec write(any,<< _::8 >>, bitstring) :: :ok
   def write(_driver,<< addr::8 >>,data) do
     bitlen = bit_size(data)
-    postlen = (8*22) - (bitlen+(addr*8))
+    postlen = (8 * 22) - (bitlen + (addr * 8))
     Agent.update(__MODULE__, fn state ->
       << prefix::binary-size(addr), _::size(bitlen),
       postfix::bitstring-size(postlen) >> = state
