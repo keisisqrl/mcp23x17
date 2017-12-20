@@ -34,6 +34,12 @@ defmodule Mcp23x17.Driver do
     GenServer.cast(server,{:write, addr, data})
   end
 
+  @spec get_addr(GenServer.server) :: integer
+  def get_addr(server) do
+    GenServer.call(server,:get_addr)
+  end
+  
+
   @spec add_pin(GenServer.server,integer,
   Mcp23x17.Pin.pin_direction) :: Supervisor.on_start_child
   def add_pin(server,pin_number,direction) do
@@ -70,7 +76,12 @@ defmodule Mcp23x17.Driver do
   def handle_call({:add_pin, pin_number, direction}, _from, state) do
     {:reply, [self(), pin_number, state.addr, direction], state}
   end
-  
+
+  @spec handle_call(:get_addr, GenServer.from,
+    __MODULE__.t) :: {:reply, integer, __MODULE__.t}
+  def handle_call(:get_addr, _from, state) do
+    {:reply, state.addr, state}
+  end
   
   # Casts
   

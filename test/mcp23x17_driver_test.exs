@@ -26,6 +26,9 @@ defmodule Mcp23x17.DriverTest do
   test "dummy write", context do
     assert Driver.write(context[:pid],<< 0::8 >>,<< 332::16 >>)
   end
-  
+
+  test "get addr", context do
+    assert 33 == Driver.get_addr(context[:pid])
+  end
 
 end
