@@ -48,8 +48,14 @@ defmodule Mcp23x17.Pin do
     Registry.register(Mcp23x17.PinSubscribers, server, direction)
   end
 
-  @spec write(pid|tuple, 0|1|true|false) :: :ok | {:error, term}
-  def write(server, value) do
+  @spec write(pid|{integer,integer}, 0|1|true|false) :: :ok | {:error, term}
+  def write(server, value)
+
+  def write(server, value) when is_tuple(server) do
+    write(GenServer.whereis(reg_name(server)),value)
+  end
+
+  def write(server, value) when is_pid(server) do
     GenServer.call(server, {:write,
                             case value do
                               0 ->
