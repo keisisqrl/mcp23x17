@@ -22,7 +22,7 @@ defmodule Mcp23x17.Adapters.Dummy do
     )
   end
 
-  
+  @spec read(any, << _::8 >>, integer) :: binary
   def read(_driver,<< addr::8 >>,len) do
     state = Agent.get(__MODULE__, &(&1))
     postlen = 22 - (len + addr)

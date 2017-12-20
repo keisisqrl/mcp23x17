@@ -3,24 +3,26 @@ defmodule Mcp23x17.Driver do
   alias Mcp23x17.Utils
   require IEx
 
+  @gpio Application.get_env(:mcp23x17, :gpio_driver)
+  
   defmacro reg_name(name) do
     quote do
       {:via, Registry, {Mcp23x17.DriverRegistry, unquote(name)}}
     end
   end
     
-  defstruct [:addr, :ale_pid, :ale_int, :adapter]
+  defstruct [:addr, :xfer_pid, :int_pid, :adapter]
 
-  @type t :: %__MODULE__{addr: integer, ale_pid: pid, ale_int: pid,
+  @type t :: %__MODULE__{addr: integer, xfer_pid: pid, int_pid: pid,
                          adapter: module}
 
   
   # Client
 
-  def start_link(addr, ale_pid, ale_int, adapter, _opts \\ []) do
+  def start_link(addr, xfer_pid, int_pid, adapter, _opts \\ []) do
     new_state = %__MODULE__{addr: addr,
-                        ale_pid: ale_pid,
-                        ale_int: ale_int,
+                        xfer_pid: xfer_pid,
+                        int_pid: int_pid,
                         adapter: adapter}
     GenServer.start_link(__MODULE__,new_state,
       name: reg_name(addr))
@@ -55,7 +57,7 @@ defmodule Mcp23x17.Driver do
   def init(state) do
     case state.adapter.write(state,Utils.iocon,Utils.init_config) do
       :ok ->
-        case :ok do # ElixirALE.GPIO.set_int(ale_int,:falling) do
+        case @gpio.set_int(state.int_pid,:falling) do
           :ok ->
             {:ok, state}
           {:error, err} ->

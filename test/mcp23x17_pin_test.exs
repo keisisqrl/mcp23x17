@@ -2,13 +2,15 @@ defmodule Mcp23x17.PinTest do
   use ExUnit.Case
   doctest Mcp23x17.Pin
   alias Mcp23x17.{Driver,Pin,Utils}
-  
+
+  @intpid self()
   
   setup do
     {:ok, _dummypid} = start_supervised(Mcp23x17.Adapters.Dummy)
     
-    {:ok, drvpid} = Mcp23x17.init_driver(35,nil,nil, Mcp23x17.Adapters.Dummy)
-    {:ok, pinpid} = Driver.add_pin(drvpid,5,:in)
+    {:ok, drvpid} = Mcp23x17.init_driver(35, nil, @intpid,
+      Mcp23x17.Adapters.Dummy)
+    {:ok, pinpid} = Driver.add_pin(drvpid, 5, :in)
     on_exit fn ->
       Supervisor.terminate_child(Mcp23x17.DriverSupervisor, drvpid)
       Supervisor.terminate_child(Mcp23x17.PinSupervisor, pinpid)
@@ -20,7 +22,8 @@ defmodule Mcp23x17.PinTest do
   test "sub by pid", context do
     Pin.set_int(context[:pinpid],:both)
     trip_int(context[:drvpid])
-    send(context[:drvpid],{:gpio_interrupt,nil,nil})
+    # send(context[:drvpid],{:gpio_interrupt,nil,nil})
+    Mcp23x17.Adapters.MockGpio.fake_int(@intpid,:falling)
 
     assert_receive {:mcp23x17_interrupt,{35,5},:rising}
   end
@@ -29,11 +32,22 @@ defmodule Mcp23x17.PinTest do
   test "sub by addr", context do
     Pin.set_int({35,5})
     trip_int(context[:drvpid])
-    send(context[:drvpid],{:gpio_interrupt,nil,nil})
+    # send(context[:drvpid],{:gpio_interrupt,nil,nil})
+    Mcp23x17.Adapters.MockGpio.fake_int(@intpid,:falling)
 
     assert_receive {:mcp23x17_interrupt,{35,5},:rising}
   end
 
+  @tag :subscribe
+  test "no interrupt on rising", context do
+    Pin.set_int({35,5})
+    trip_int(context[:drvpid])
+    # send(context[:drvpid],{:gpio_interrupt,nil,nil})
+    Mcp23x17.Adapters.MockGpio.fake_int(@intpid,:rising)
+
+    refute_receive {:mcp23x17_interrupt,{35,5},:rising}
+  end
+  
   @tag :write
   test "write pin status", context do
     {:ok, out_pin} = Driver.add_pin(context[:drvpid],7,:out)
