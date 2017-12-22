@@ -1,6 +1,8 @@
 defmodule Mcp23x17.Pin do
   use GenServer
   alias Mcp23x17.{Driver,Utils}
+
+  @compile if Mix.env == :test, do: :export_all
   
   defstruct [:driver, :pin_number, :driver_addr]
 
