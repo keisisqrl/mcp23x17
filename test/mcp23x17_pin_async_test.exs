@@ -13,4 +13,15 @@ defmodule Mcp23x17.PinAsyncTest do
     end
   end
 
+  describe "extract_info/1" do
+    test "extract bit" do
+      for x <- Range.new(0,15),
+        y <- Range.new(15,0),
+        x + y == 15 do
+            assert Pin.extract_info(x+1,
+              << 0::size(x), 1::1, 0::size(y) >>)
+      end
+    end
+  end
+
 end
