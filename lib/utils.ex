@@ -1,20 +1,23 @@
 defmodule Mcp23x17.Utils do
   use Bitwise
 
+  @moduledoc """
+  Utilities for address conversion and verification.
+  """
+
   defmacro valid_addr?(addr) do
     quote do
       (unquote(addr) <= 39) and (unquote(addr) >= 32)
     end
   end
 
-    
   @doc """
   Convert address pins (as integer) to base address for MCP23x17.
 
   Returns integer.
 
   ## Examples
-  
+
   iex> Mcp23x17.Utils.base_addr(3)
   35
   iex> Mcp23x17.Utils.base_addr(8)
@@ -127,6 +130,5 @@ defmodule Mcp23x17.Utils do
   def intcapa do
     << 0x10::8 >>
   end
-  
-  
+
 end

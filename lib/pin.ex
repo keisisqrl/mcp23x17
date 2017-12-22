@@ -1,9 +1,14 @@
 defmodule Mcp23x17.Pin do
   use GenServer
-  alias Mcp23x17.{Driver,Utils}
+  alias Mcp23x17.{Driver, Utils}
+
+  @moduledoc """
+  Models a pin on a MCP23x17 device. API intended to mimic `ElixirALE.GPIO`
+  where possible.
+  """
 
   @compile if Mix.env == :test, do: :export_all
-  
+
   defstruct [:driver, :pin_number, :driver_addr]
 
   @type t :: %__MODULE__{driver: pid, pin_number: integer,
@@ -18,20 +23,19 @@ defmodule Mcp23x17.Pin do
       {:via, Registry, {Mcp23x17.PinRegistry, unquote(name)}}
     end
   end
-  
-  
+
   # Client
 
   @spec start_link(pid, integer, integer, pin_direction) :: GenServer.on_start
-  def start_link(driver,pin_number, driver_addr, direction, _opts \\ []) do
+  def start_link(driver, pin_number, driver_addr, direction, _opts \\ []) do
     state = %__MODULE__{driver: driver, pin_number: pin_number,
                         driver_addr: driver_addr}
-    GenServer.start_link(__MODULE__,[state, direction],
-      name: reg_name({driver_addr,pin_number}))
+    GenServer.start_link(__MODULE__, [state, direction],
+      name: reg_name({driver_addr, pin_number}))
   end
 
   @doc """
-  Turn on interrupts for the pin. Mimics ElixirALE GPIO interface, but 
+  Turn on interrupts for the pin. Mimics ElixirALE GPIO interface, but
   has a default of :both if no direction is given.
   """
 
@@ -40,7 +44,7 @@ defmodule Mcp23x17.Pin do
   def set_int(server, direction \\ :both)
 
   def set_int(server, direction) when is_tuple(server) do
-    set_int(GenServer.whereis(reg_name(server)),direction)
+    set_int(GenServer.whereis(reg_name(server)), direction)
   end
 
   def set_int(server, direction) when is_pid(server) and direction in
@@ -50,11 +54,11 @@ defmodule Mcp23x17.Pin do
     Registry.register(Mcp23x17.PinSubscribers, server, direction)
   end
 
-  @spec write(pid|{integer,integer}, 0|1|true|false) :: :ok | {:error, term}
+  @spec write(pid|{integer, integer}, 0|1|true|false) :: :ok | {:error, term}
   def write(server, value)
 
   def write(server, value) when is_tuple(server) do
-    write(GenServer.whereis(reg_name(server)),value)
+    write(GenServer.whereis(reg_name(server)), value)
   end
 
   def write(server, value) when is_pid(server) do
@@ -69,28 +73,27 @@ defmodule Mcp23x17.Pin do
                             end
                            })
   end
-  
-  
+
   # Callbacks
 
-  @spec init([atom]) :: {:ok,__MODULE__.t}
+  @spec init([atom]) :: {:ok, __MODULE__.t}
   def init([state, direction]) do
     Registry.register(Mcp23x17.PinNotify,
-      state.driver_addr,[])
-    cur_reg = Driver.read(state.driver,Utils.iodir,2)
-    new_reg = modify_info(state.pin_number,cur_reg,
+      state.driver_addr, [])
+    cur_reg = Driver.read(state.driver, Utils.iodir, 2)
+    new_reg = modify_info(state.pin_number, cur_reg,
     (direction == :in))
-    Driver.write(state.driver,Utils.iodir,new_reg)
+    Driver.write(state.driver, Utils.iodir, new_reg)
     {:ok, state}
   end
 
   def handle_call({:write, value}, _from, state) do
-    cur_reg = Driver.read(state.driver,Utils.iodir,2)
-    {:reply, if extract_info(state.pin_number,cur_reg) do
+    cur_reg = Driver.read(state.driver, Utils.iodir, 2)
+    {:reply, if extract_info(state.pin_number, cur_reg) do
         {:error, "Pin is input"}
       else
-        Driver.write(state.driver,Utils.iodir,
-          modify_info(state.pin_number,cur_reg,value))
+        Driver.write(state.driver, Utils.iodir,
+          modify_info(state.pin_number, cur_reg, value))
         :ok
       end,
      state
@@ -98,10 +101,10 @@ defmodule Mcp23x17.Pin do
   end
 
   # Infos
-  
-  @spec handle_info({:interrupt,integer,integer},
+
+  @spec handle_info({:interrupt, integer, integer},
     __MODULE__.t) :: {:noreply, __MODULE__.t}
-  def handle_info({:interrupt,interrupts,pin_states}, state) do
+  def handle_info({:interrupt, interrupts, pin_states}, state) do
     if extract_info(state.pin_number, << interrupts::16 >>) do
       pin_transition = if extract_info(
             state.pin_number, << pin_states::16 >>) do
@@ -124,12 +127,12 @@ defmodule Mcp23x17.Pin do
   end
 
   # Utilities
-  
-  @spec extract_info(integer,<< _::16 >>) :: boolean
+
+  @spec extract_info(integer, << _::16 >>) :: boolean
   defp extract_info(pin_number, registers) do
     offset = pin_number - 1
     rem = 16 - pin_number
-    << _::size(offset), retval::1, _::size(rem) >> = registers 
+    << _::size(offset), retval::1, _::size(rem) >> = registers
     case retval do
       1 ->
         true
@@ -138,7 +141,7 @@ defmodule Mcp23x17.Pin do
     end
   end
 
-  @spec modify_info(integer,<<_::16>>, boolean) :: <<_::16>>
+  @spec modify_info(integer, <<_::16>>, boolean) :: <<_::16>>
   defp modify_info(pin_number, registers, val) do
     newval = if val, do: 1, else: 0
     offset = pin_number - 1
@@ -147,6 +150,5 @@ defmodule Mcp23x17.Pin do
       _oldval::bitstring-1, postfix::bitstring-size(rem) >> = registers
     << prefix::bitstring, newval::1, postfix::bitstring >>
   end
-  
-  
+
 end

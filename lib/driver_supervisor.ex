@@ -2,6 +2,8 @@ defmodule Mcp23x17.DriverSupervisor do
   use Supervisor
   alias Mcp23x17.Driver
 
+  @moduledoc false
+
   def start_link(_arg) do
     Supervisor.start_link(__MODULE__, [], name: __MODULE__)
   end

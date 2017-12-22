@@ -1,8 +1,10 @@
 defmodule Mcp23x17.PinSupervisor do
   use Supervisor
 
+  @moduledoc false
+
   def start_link(_) do
-    Supervisor.start_link(__MODULE__,[],name: __MODULE__)
+    Supervisor.start_link(__MODULE__, [], name: __MODULE__)
   end
 
   def init(_) do

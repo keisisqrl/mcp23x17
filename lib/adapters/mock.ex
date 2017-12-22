@@ -10,8 +10,8 @@ defmodule Mcp23x17.Adapters.Mock do
     end, name: __MODULE__)
   end
 
-  @spec write(any,<< _::8 >>, bitstring) :: :ok
-  def write(_driver,<< addr::8 >>,data) do
+  @spec write(any, << _::8 >>, bitstring) :: :ok
+  def write(_driver, << addr::8 >>, data) do
     bitlen = bit_size(data)
     postlen = (8 * 22) - (bitlen + (addr * 8))
     Agent.update(__MODULE__, fn state ->
@@ -23,7 +23,7 @@ defmodule Mcp23x17.Adapters.Mock do
   end
 
   @spec read(any, << _::8 >>, integer) :: binary
-  def read(_driver,<< addr::8 >>,len) do
+  def read(_driver, << addr::8 >>, len) do
     state = Agent.get(__MODULE__, &(&1))
     postlen = 22 - (len + addr)
     << _::binary-size(addr), retval::binary-size(len),
@@ -32,4 +32,3 @@ defmodule Mcp23x17.Adapters.Mock do
   end
 
 end
-
