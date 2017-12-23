@@ -3,6 +3,8 @@ defmodule Mcp23x17.Driver do
   alias Mcp23x17.Utils
   require IEx
 
+  @doctest_addr 33
+
   @moduledoc """
   Driver function for MCP23x17 IC. Can interact with SPI or I2C, using an
   adapter defined under `Mcp23x17.Adapters`.
@@ -10,19 +12,23 @@ defmodule Mcp23x17.Driver do
 
   @gpio Application.get_env(:mcp23x17, :gpio_driver)
 
+  defstruct [:addr, :xfer_pid, :int_pid, :adapter]
+
+  @type t :: %__MODULE__{addr: integer, xfer_pid: pid, int_pid: pid,
+                         adapter: module}
+
+  @doc """
+  Translates address of MCP23x17 IC to `GenServer.start_link/3`-compatible
+  `name` property.
+  """
   defmacro reg_name(name) do
     quote do
       {:via, Registry, {Mcp23x17.DriverRegistry, unquote(name)}}
     end
   end
 
-  defstruct [:addr, :xfer_pid, :int_pid, :adapter]
-
-  @type t :: %__MODULE__{addr: integer, xfer_pid: pid, int_pid: pid,
-                         adapter: module}
-
   # Client
-
+  @spec start_link(integer, pid, pid, module, list) :: GenServer.on_start
   def start_link(addr, xfer_pid, int_pid, adapter, _opts \\ []) do
     new_state = %__MODULE__{addr: addr,
                         xfer_pid: xfer_pid,
@@ -32,25 +38,87 @@ defmodule Mcp23x17.Driver do
       name: reg_name(addr))
   end
 
+  @doc """
+  Read `len` bytes from the associated MCP23x17 starting at register `addr`
+  """
+  @spec read(GenServer.server, <<_::8>>, integer) :: binary()
   def read(server, addr, len) do
     GenServer.call(server, {:read, addr, len})
   end
 
+  @doc """
+  Write bits to the associated MCP23x17 IC at register `addr`.
+  """
+  @spec write(GenServer.server, <<_::8>>, bitstring) :: :ok
   def write(server, addr, data) do
     GenServer.cast(server, {:write, addr, data})
   end
 
+  @doc """
+  Return the address of the associated MCP23x17 IC.
+
+  ## Examples
+
+      iex> {:ok, drvpid} =
+      ...> Mcp23x17.Driver.start_link(33, nil, nil, Mcp23x17.Adapters.Mock)
+      iex> Mcp23x17.Driver.get_addr(drvpid)
+      35
+      iex> GenServer.stop(drvpid)
+      :ok
+  """
   @spec get_addr(GenServer.server) :: integer
   def get_addr(server) do
     GenServer.call(server, :get_addr)
   end
 
+  @doc """
+  Spawn associated `Mcp23x17.Pin` process
+
+  ## Examples
+
+      iex> {:ok, drvpid} =
+      ...> Mcp23x17.Driver.start_link(33, nil, nil, Mcp23x17.Adapters.Mock)
+      iex> {:ok, pinpid} = Mcp23x17.Driver.add_pin(drvpid, 5, :out)
+      iex> is_pid pinpid
+      true
+      iex> GenServer.stop(drvpid)
+      :ok
+  """
   @spec add_pin(GenServer.server, integer,
   Mcp23x17.Pin.pin_direction) :: Supervisor.on_start_child
   def add_pin(server, pin_number, direction) do
     Supervisor.start_child(
       Mcp23x17.PinSupervisor, GenServer.call(server,
         {:add_pin, pin_number, direction}))
+  end
+
+  @doc """
+  Terminate via `Mcp23x17.DriverSupervisor` and release associated
+  `Mcp23x17.Pin`s.
+
+  ## Examples
+
+      iex> {:ok, drvpid} =
+      ...> Mcp23x17.init_driver(33, nil, nil,
+      ...> Mcp23x17.Adapters.Mock)
+      iex> {:ok, pinpid} = Mcp23x17.Driver.add_pin(drvpid, 8, :out)
+      iex> Process.alive? pinpid
+      true
+      iex> Mcp23x17.Driver.release(drvpid)
+      :ok
+      iex> Process.alive? pinpid
+      false
+  """
+  @spec release(pid) :: :ok | {:error, :not_found}
+  def release(pid) do
+    Registry.dispatch(Mcp23x17.PinNotify, get_addr(pid), fn entries ->
+        for {pinpid, _} <- entries do
+          Supervisor.terminate_child(Mcp23x17.PinSupervisor, pinpid)
+        end
+    end)
+    Supervisor.terminate_child(
+      Mcp23x17.DriverSupervisor, pid
+    )
   end
 
   # Callbacks

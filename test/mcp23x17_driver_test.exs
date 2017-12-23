@@ -1,6 +1,5 @@
 defmodule Mcp23x17.DriverTest do
   use ExUnit.Case
-  doctest Mcp23x17.Driver
   alias Mcp23x17.Driver
 
   setup do

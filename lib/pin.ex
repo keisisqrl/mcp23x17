@@ -18,6 +18,17 @@ defmodule Mcp23x17.Pin do
 
   @type interrupt_direction :: :both | :falling | :rising
 
+  @typedoc """
+  Represents unique address of pin by `Mcp23x17.Driver` address
+  and pin number. Used via Registry with `reg_name/1` as `GenServer` registered
+  name.
+  """
+  @type pin_address :: {integer, integer}
+
+  @doc """
+  Translates tuple of `{driver_addr, pin_number}` to
+  `GenServer.start_link/3`-compatible `name` property.
+  """
   defmacro reg_name(name) do
     quote do
       {:via, Registry, {Mcp23x17.PinRegistry, unquote(name)}}
@@ -35,10 +46,9 @@ defmodule Mcp23x17.Pin do
   end
 
   @doc """
-  Turn on interrupts for the pin. Mimics ElixirALE GPIO interface, but
-  has a default of :both if no direction is given.
+  Turn on interrupts for the pin. Mimics `ElixirALE.GPIO.set_int/2`
+  API, but has a default of :both if no direction is given.
   """
-
   @spec set_int(pid|tuple, interrupt_direction) :: {:ok, term} |
   {:error, term}
   def set_int(server, direction \\ :both)
@@ -54,7 +64,10 @@ defmodule Mcp23x17.Pin do
     Registry.register(Mcp23x17.PinSubscribers, server, direction)
   end
 
-  @spec write(pid|{integer, integer}, 0|1|true|false) :: :ok | {:error, term}
+  @doc """
+  Write a value to a pin. Accepts `t:pid` or `t:pin_address` to identify pin.
+  """
+  @spec write(pid|pin_address, 0|1|true|false) :: :ok | {:error, term}
   def write(server, value)
 
   def write(server, value) when is_tuple(server) do

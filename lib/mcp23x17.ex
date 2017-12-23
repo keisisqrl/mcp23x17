@@ -4,15 +4,18 @@ defmodule Mcp23x17 do
   """
   use Application
 
+  @doc false
   def start(_, _) do
     Mcp23x17.Supervisor.start_link([])
   end
 
-  @doc """
+  @doc ~S"""
   Create a Driver in the supervision tree and return it.
 
-  iex> Mcp23x17.init_driver(33, nil, nil, Mcp23x17.Adapters.Mock)
-  {:ok, #Pid<>}
+  ## Examples
+
+      iex> Mcp23x17.init_driver(33, nil, nil, Mcp23x17.Adapters.Mock)
+      {:ok, #Pid<>}
   """
   @spec init_driver(integer, pid, pid, module) :: Supervisor.on_start_child
   def init_driver(addr, ale_pid, ale_int, adapter) do
