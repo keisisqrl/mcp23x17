@@ -9,3 +9,12 @@ env:
   - MIX_ENV=test
 
 script: mix coveralls.travis
+
+before_deploy: mix docs
+
+deploy:
+  provider: pages
+  github_token: $GITHUB_TOKEN
+  local_dir: doc
+  on:
+    branch: master
