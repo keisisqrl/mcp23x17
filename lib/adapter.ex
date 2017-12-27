@@ -6,9 +6,9 @@ defmodule Mcp23x17.Adapter do
     Behaviour for Bus adapters (I2C or SPI).
     """
     
-    @callback read(GenServer.server, <<_::8>>, integer) :: binary()
+    @callback read(Mcp23x17.Driver.t, <<_::8>>, integer) :: binary() | {:error, term}
 
-    @callback write(GenServer.server, << _::8 >>, bitstring) :: :ok | {:error, term}
+    @callback write(Mcp23x17.Driver.t, << _::8 >>, binary) :: :ok | {:error, term}
   end
 
   defmodule Gpio do

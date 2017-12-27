@@ -18,6 +18,8 @@ defmodule Mcp23x17.Mixfile do
       docs: [main: "Mcp23x17",
              extras: ["README.md"],
              groups_for_modules: [
+               "Adapters": [Mcp23x17.Adapters.ElixirALE.I2C,
+                            Mcp23x17.Adapters.ElixirALE.SPI],
                "Adapter Behaviors": [Mcp23x17.Adapter.Bus,
                                      Mcp23x17.Adapter.Gpio],
                "Mock Adapters": [Mcp23x17.Adapters.MockBus,
@@ -43,7 +45,8 @@ defmodule Mcp23x17.Mixfile do
       {:elixir_ale, "~> 1.0"},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
       {:excoveralls, "~> 0.7", only: :test},
-      {:ex_doc, "~> 0.16", only: [:dev, :test], runtime: false}
+      {:ex_doc, "~> 0.16", only: [:dev, :test], runtime: false},
+      {:mock, "~> 0.3.1", only: [:test]}
     ]
   end
 end
