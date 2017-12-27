@@ -16,6 +16,10 @@ defmodule Mcp23x17.Pin do
 
   @type pin_direction :: :in | :out
 
+  @typedoc """
+  Indicates edge (or any transition) used to trigger pin interrupt. Compare 
+  `t:ElixirALE.GPIO.int_direction/0`.
+  """
   @type interrupt_direction :: :both | :falling | :rising
 
   @typedoc """

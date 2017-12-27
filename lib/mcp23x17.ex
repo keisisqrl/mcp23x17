@@ -10,7 +10,7 @@ defmodule Mcp23x17 do
   end
 
   @doc ~S"""
-  Create a Driver in the supervision tree and return it.
+  Create a `Mcp23x17.Driver` in the supervision tree and return it.
 
   Always call this with the base (7-bit) address of the chip. This can be 
   calculated from the A pins using `Mcp23x17.Utils.base_addr/1`.

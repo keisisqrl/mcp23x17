@@ -8,12 +8,27 @@ defmodule Mcp23x17.Driver do
   @moduledoc """
   Driver function for MCP23x17 IC. Can interact with SPI or I2C, using an
   adapter defined under `Mcp23x17.Adapters`.
+
+  Instantiate/start using `Mcp23x17.init_driver/1`.
   """
 
   @gpio Application.get_env(:mcp23x17, :gpio_driver)
 
   defstruct [:addr, :xfer_pid, :int_pid, :adapter]
 
+  @typedoc """
+  The core state box for an Mcp23x17 IC. Required:
+
+  * `:adapter`: implementation of `Mcp23x17.Adapter.Bus`    
+  * `:addr`: integer representation of 7-bit address for IC
+
+  Expected, unless `:adapter` specifies otherwise:
+
+  * `:xfer_pid`: `pid` or `t:GenServer.server/0` referencing a GenServer 
+  corresponding to the underlying bus driver
+  * `:int_pid`: `pid` or `t:GenServer.server/0` referencing a GenServer 
+  corresponding to the driver for the interrupt pin
+  """
   @type t :: %__MODULE__{addr: integer, xfer_pid: pid, int_pid: pid,
                          adapter: module}
 
@@ -28,6 +43,10 @@ defmodule Mcp23x17.Driver do
   end
 
   # Client
+
+  @doc false
+  # For internal use only - tests notwithstanding, Driver should be started
+  # through Mcp23x17.init_driver/1
   @spec start_link([term], list) :: GenServer.on_start
   def start_link([addr, xfer_pid, int_pid, adapter], _opts \\ []) do
     new_state = %__MODULE__{addr: addr,
