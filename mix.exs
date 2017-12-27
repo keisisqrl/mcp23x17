@@ -14,7 +14,9 @@ defmodule Mcp23x17.Mixfile do
 
       # Docs
       name: "Mcp23x17",
-      source_url: "https://github.com/keisisqrl/mcp23x17"
+      source_url: "https://github.com/keisisqrl/mcp23x17",
+      docs: [main: "Mcp23x17",
+             extras: ["README.md"]]
       
     ]
   end
