@@ -12,9 +12,12 @@ defmodule Mcp23x17 do
   @doc ~S"""
   Create a Driver in the supervision tree and return it.
 
+  Always call this with the base (7-bit) address of the chip. This can be 
+  calculated from the A pins using `Mcp23x17.Utils.base_addr/1`.
+
   ## Examples
 
-      iex> Mcp23x17.init_driver(33, nil, nil, Mcp23x17.Adapters.Mock)
+      iex> Mcp23x17.init_driver([33, nil, nil, Mcp23x17.Adapters.Mock])
       {:ok, #Pid<>}
   """
 #  @spec init_driver([integer, pid, pid, module]) :: Supervisor.on_start_child
