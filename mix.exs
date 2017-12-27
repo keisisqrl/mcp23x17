@@ -20,7 +20,7 @@ defmodule Mcp23x17.Mixfile do
              groups_for_modules: [
                "Adapter Behaviors": [Mcp23x17.Adapter.Bus,
                                      Mcp23x17.Adapter.Gpio],
-               "Mock Adapters": [Mcp23x17.Adapters.Mock,
+               "Mock Adapters": [Mcp23x17.Adapters.MockBus,
                                  Mcp23x17.Adapters.MockGpio]
              ]
             ]
