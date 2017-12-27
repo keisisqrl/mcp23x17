@@ -8,7 +8,7 @@ defmodule Mcp23x17.AdaptersElixirALEI2CTest do
      [],
      [write_read_device: fn(_pid, _addr, _regaddr, len) ->
        << 0::unit(8)-size(len) >> end,
-      write_device: fn(_pid, _addr, data) -> :ok end]}]) do
+      write_device: fn(_pid, _addr, _data) -> :ok end]}]) do
     {:ok, driver: %Mcp23x17.Driver{adapter: I2C, addr: :test_addr,
                                    xfer_pid: :xfer_pid, int_pid: :int_pid}}
   end

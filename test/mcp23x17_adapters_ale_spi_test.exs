@@ -6,7 +6,7 @@ defmodule Mcp23x17.AdaptersElixirALESPITest do
   setup_with_mocks([
     {ElixirALE.SPI,
      [],
-     [transfer: fn(pid, data) ->
+     [transfer: fn(_pid, data) ->
        len = byte_size data
        << 0::unit(8)-size(len) >>
      end]}]) do
