@@ -16,8 +16,14 @@ defmodule Mcp23x17.Mixfile do
       name: "Mcp23x17",
       source_url: "https://github.com/keisisqrl/mcp23x17",
       docs: [main: "Mcp23x17",
-             extras: ["README.md"]]
-      
+             extras: ["README.md"],
+             groups_for_modules: [
+               "Adapter Behaviors": [Mcp23x17.Adapter.Bus,
+                                     Mcp23x17.Adapter.Gpio],
+               "Mock Adapters": [Mcp23x17.Adapters.Mock,
+                                 Mcp23x17.Adapters.MockGpio]
+             ]
+            ]
     ]
   end
 

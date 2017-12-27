@@ -28,8 +28,8 @@ defmodule Mcp23x17.Driver do
   end
 
   # Client
-  @spec start_link(integer, pid, pid, module, list) :: GenServer.on_start
-  def start_link(addr, xfer_pid, int_pid, adapter, _opts \\ []) do
+  @spec start_link([term], list) :: GenServer.on_start
+  def start_link([addr, xfer_pid, int_pid, adapter], _opts \\ []) do
     new_state = %__MODULE__{addr: addr,
                         xfer_pid: xfer_pid,
                         int_pid: int_pid,
@@ -60,10 +60,10 @@ defmodule Mcp23x17.Driver do
   ## Examples
 
       iex> {:ok, drvpid} =
-      ...> Mcp23x17.Driver.start_link(33, nil, nil, Mcp23x17.Adapters.Mock)
+      ...> Mcp23x17.init_driver([33, nil, nil, Mcp23x17.Adapters.MockBus])
       iex> Mcp23x17.Driver.get_addr(drvpid)
-      35
-      iex> GenServer.stop(drvpid)
+      33
+      iex> Mcp23x17.Driver.release(drvpid)
       :ok
   """
   @spec get_addr(GenServer.server) :: integer
@@ -77,11 +77,11 @@ defmodule Mcp23x17.Driver do
   ## Examples
 
       iex> {:ok, drvpid} =
-      ...> Mcp23x17.Driver.start_link(33, nil, nil, Mcp23x17.Adapters.Mock)
+      ...> Mcp23x17.init_driver([33, nil, nil, Mcp23x17.Adapters.MockBus])
       iex> {:ok, pinpid} = Mcp23x17.Driver.add_pin(drvpid, 5, :out)
       iex> is_pid pinpid
       true
-      iex> GenServer.stop(drvpid)
+      iex> Mcp23x17.Driver.release(drvpid)
       :ok
   """
   @spec add_pin(GenServer.server, integer,
@@ -99,8 +99,8 @@ defmodule Mcp23x17.Driver do
   ## Examples
 
       iex> {:ok, drvpid} =
-      ...> Mcp23x17.init_driver(33, nil, nil,
-      ...> Mcp23x17.Adapters.Mock)
+      ...> Mcp23x17.init_driver([33, nil, nil,
+      ...> Mcp23x17.Adapters.MockBus])
       iex> {:ok, pinpid} = Mcp23x17.Driver.add_pin(drvpid, 8, :out)
       iex> Process.alive? pinpid
       true

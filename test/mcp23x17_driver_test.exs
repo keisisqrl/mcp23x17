@@ -1,15 +1,13 @@
 defmodule Mcp23x17.DriverTest do
   use ExUnit.Case
+  doctest Mcp23x17.Driver
   alias Mcp23x17.Driver
 
   setup do
-    {:ok, _mockpid} = start_supervised(Mcp23x17.Adapters.Mock)
+    {:ok, _mockpid} = start_supervised(Mcp23x17.Adapters.MockBus)
     
-    {:ok, pid} = Mcp23x17.init_driver(33,nil,nil, Mcp23x17.Adapters.Mock)
-    on_exit fn ->
-      Supervisor.terminate_child(Mcp23x17.DriverSupervisor, pid)
-    end
-    
+    {:ok, pid} = start_supervised({Mcp23x17.Driver,
+          [34,nil,nil, Mcp23x17.Adapters.MockBus]})
     {:ok, pid: pid}
   end
 
@@ -27,7 +25,7 @@ defmodule Mcp23x17.DriverTest do
   end
 
   test "get addr", context do
-    assert 33 == Driver.get_addr(context[:pid])
+    assert 34 == Driver.get_addr(context[:pid])
   end
 
 end

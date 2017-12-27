@@ -1,8 +1,10 @@
-defmodule Mcp23x17.Adapters.Mock do
+defmodule Mcp23x17.Adapters.MockBus do
   @moduledoc """
   Mock adapter for testing.
   """
   use Agent
+
+  @behaviour Mcp23x17.Adapter.Bus
 
   def start_link(_) do
     Agent.start_link(fn ->
@@ -22,7 +24,7 @@ defmodule Mcp23x17.Adapters.Mock do
     )
   end
 
-  @spec read(any, << _::8 >>, integer) :: binary
+  @spec read(any, << _::8 >>, integer) :: binary | {:error, term}
   def read(_driver, << addr::8 >>, len) do
     state = Agent.get(__MODULE__, &(&1))
     postlen = 22 - (len + addr)
