@@ -17,13 +17,13 @@ defmodule Mcp23x17.Adapter do
     @moduledoc """
     Behavior for GPIO adapters. Mimics part of `ElixirALE.GPIO` API.
     """
-    
+
     @callback read(GenServer.server) :: 0 | 1 | term
 
     @callback write(GenServer.server, 0 | 1 | boolean) :: :ok | {:error, term}
-    
+
     @callback set_int(GenServer.server, Mcp23x17.Pin.interrupt_direction) ::
     :ok | {:error, term()}
   end
-    
+
 end

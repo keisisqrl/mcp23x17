@@ -62,9 +62,7 @@ defmodule Mcp23x17.Pin do
   end
 
   def set_int(server, direction) when is_pid(server) and direction in
-  [:rising,
-   :falling,
-   :both] do
+                                      [:rising, :falling, :both] do
     Registry.register(Mcp23x17.PinSubscribers, server, direction)
   end
 
