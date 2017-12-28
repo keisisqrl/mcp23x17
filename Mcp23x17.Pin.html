@@ -1,0 +1,471 @@
+    <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.18.1">
+    <title>Mcp23x17.Pin – Mcp23x17 v0.1.0</title>
+    <link rel="stylesheet" href="dist/app-c922dbe7ef.css" />
+    
+    <script src="dist/sidebar_items-5003455f91.js"></script>
+    
+    
+    
+    
+  </head>
+  <body data-type="modules">
+    <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
+
+    <div class="main">
+<button class="sidebar-toggle">
+  <span class="icon-menu" aria-hidden="true"></span>
+  <span class="sr-only">Toggle Sidebar</span>
+</button>
+<section class="sidebar">
+
+  
+  <a href="Mcp23x17.html" class="sidebar-projectLink">
+    <div class="sidebar-projectDetails">
+      <h1 class="sidebar-projectName">
+        Mcp23x17
+      </h1>
+      <h2 class="sidebar-projectVersion">
+        v0.1.0
+      </h2>
+    </div>
+    
+  </a>
+
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button">
+      <span class="icon-search" aria-hidden="true"></span>
+    </button>
+    <input name="q" type="text" id="search-list" class="search-input" placeholder="search" aria-label="Search" autocomplete="off" />
+  </form>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+    
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
+    
+
+    
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+
+      <h1>
+        <small class="visible-xs">Mcp23x17 v0.1.0</small>
+        Mcp23x17.Pin
+        
+          <a href="https://github.com/keisisqrl/mcp23x17/blob/master/lib/pin.ex#L1" title="View Source" class="view-source" rel="help">
+            <span class="icon-code" aria-hidden="true"></span>
+            <span class="sr-only">View Source</span>
+          </a>
+        
+      </h1>
+
+      
+        <section id="moduledoc">
+          <p>Models a pin on a MCP23x17 device. API intended to mimic <a href="https://hexdocs.pm/elixir_ale/1.0.1/ElixirALE.GPIO.html"><code class="inline">ElixirALE.GPIO</code></a>
+where possible.</p>
+
+        </section>
+      
+
+      
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Summary
+          </h1>
+          
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:interrupt_direction/0">interrupt_direction()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Indicates edge (or any transition) used to trigger pin interrupt. Compare 
+<a href="https://hexdocs.pm/elixir_ale/1.0.1/ElixirALE.GPIO.html#t:int_direction/0"><code class="inline">ElixirALE.GPIO.int_direction/0</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:pin_address/0">pin_address()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Represents unique address of pin by <a href="Mcp23x17.Driver.html"><code class="inline">Mcp23x17.Driver</code></a> address
+and pin number. Used via Registry with <a href="#reg_name/1"><code class="inline">reg_name/1</code></a> as <a href="https://hexdocs.pm/elixir/GenServer.html"><code class="inline">GenServer</code></a> registered
+name</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:pin_direction/0">pin_direction()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:t/0">t()</a>
+  </div>
+  
+</div>
+
+  </div>
+
+
+          
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#reg_name/1">reg_name(name)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Translates tuple of <code class="inline">{driver_addr, pin_number}</code> to
+<a href="https://hexdocs.pm/elixir/GenServer.html#start_link/3"><code class="inline">GenServer.start_link/3</code></a>-compatible <code class="inline">name</code> property</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#set_int/2">set_int(server, direction \\ :both)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Turn on interrupts for the pin. Mimics <a href="https://hexdocs.pm/elixir_ale/1.0.1/ElixirALE.GPIO.html#set_int/2"><code class="inline">ElixirALE.GPIO.set_int/2</code></a>
+API, but has a default of :both if no direction is given</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#start_link/5">start_link(driver, pin_number, driver_addr, direction, opts \\ [])</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#write/2">write(server, value)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Write a value to a pin. Accepts <code class="inline">t:pid</code> or <code class="inline">t:pin_address</code> to identify pin</p>
+</div>
+  
+</div>
+
+  </div>
+
+
+          
+
+        </section>
+      
+
+      
+        <section id="types" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#types">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Types
+          </h1>
+          <div class="types-list">
+            <div class="detail" id="t:interrupt_direction/0">
+  
+  
+  <div class="detail-header">
+    <a href="#t:interrupt_direction/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <span class="signature">interrupt_direction()</span>
+    
+      <a href="https://github.com/keisisqrl/mcp23x17/blob/master/lib/pin.ex#L23" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>interrupt_direction() :: :both | :falling | :rising</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Indicates edge (or any transition) used to trigger pin interrupt. Compare 
+<a href="https://hexdocs.pm/elixir_ale/1.0.1/ElixirALE.GPIO.html#t:int_direction/0"><code class="inline">ElixirALE.GPIO.int_direction/0</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="t:pin_address/0">
+  
+  
+  <div class="detail-header">
+    <a href="#t:pin_address/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <span class="signature">pin_address()</span>
+    
+      <a href="https://github.com/keisisqrl/mcp23x17/blob/master/lib/pin.ex#L30" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>pin_address() :: {integer(), integer()}</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Represents unique address of pin by <a href="Mcp23x17.Driver.html"><code class="inline">Mcp23x17.Driver</code></a> address
+and pin number. Used via Registry with <a href="#reg_name/1"><code class="inline">reg_name/1</code></a> as <a href="https://hexdocs.pm/elixir/GenServer.html"><code class="inline">GenServer</code></a> registered
+name.</p>
+
+  </section>
+</div>
+<div class="detail" id="t:pin_direction/0">
+  
+  
+  <div class="detail-header">
+    <a href="#t:pin_direction/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <span class="signature">pin_direction()</span>
+    
+      <a href="https://github.com/keisisqrl/mcp23x17/blob/master/lib/pin.ex#L17" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>pin_direction() :: :in | :out</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="t:t/0">
+  
+  
+  <div class="detail-header">
+    <a href="#t:t/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <span class="signature">t()</span>
+    
+      <a href="https://github.com/keisisqrl/mcp23x17/blob/master/lib/pin.ex#L14" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>t() :: %Mcp23x17.Pin{driver: pid(), driver_addr: integer(), pin_number: integer()}</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+
+          </div>
+        </section>
+      
+
+      
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Functions
+          </h1>
+          <div class="detail" id="reg_name/1">
+  
+  
+  <div class="detail-header">
+    <a href="#reg_name/1" class="detail-link" title="Link to this macro">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this macro</span>
+    </a>
+    <span class="signature">reg_name(name)</span>
+    
+      <a href="https://github.com/keisisqrl/mcp23x17/blob/master/lib/pin.ex#L36" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+    
+    
+      <span class="note">(macro)</span>
+    
+    
+  </div>
+  <section class="docstring">
+    <p>Translates tuple of <code class="inline">{driver_addr, pin_number}</code> to
+<a href="https://hexdocs.pm/elixir/GenServer.html#start_link/3"><code class="inline">GenServer.start_link/3</code></a>-compatible <code class="inline">name</code> property.</p>
+
+  </section>
+</div>
+<div class="detail" id="set_int/2">
+  
+  
+    <span id="set_int/1"></span>
+  
+  <div class="detail-header">
+    <a href="#set_int/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <span class="signature">set_int(server, direction \\ :both)</span>
+    
+      <a href="https://github.com/keisisqrl/mcp23x17/blob/master/lib/pin.ex#L64" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>set_int(pid() | tuple(), <a href="#t:interrupt_direction/0">interrupt_direction</a>()) ::
+  {:ok, term()} |
+  {:error, term()}</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Turn on interrupts for the pin. Mimics <a href="https://hexdocs.pm/elixir_ale/1.0.1/ElixirALE.GPIO.html#set_int/2"><code class="inline">ElixirALE.GPIO.set_int/2</code></a>
+API, but has a default of :both if no direction is given.</p>
+
+  </section>
+</div>
+<div class="detail" id="start_link/5">
+  
+  
+    <span id="start_link/4"></span>
+  
+  <div class="detail-header">
+    <a href="#start_link/5" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <span class="signature">start_link(driver, pin_number, driver_addr, direction, opts \\ [])</span>
+    
+      <a href="https://github.com/keisisqrl/mcp23x17/blob/master/lib/pin.ex#L45" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+    
+    
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="write/2">
+  
+  
+  <div class="detail-header">
+    <a href="#write/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <span class="signature">write(server, value)</span>
+    
+      <a href="https://github.com/keisisqrl/mcp23x17/blob/master/lib/pin.ex#L79" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>write(pid() | <a href="#t:pin_address/0">pin_address</a>(), 0 | 1 | true | false) ::
+  :ok |
+  {:error, term()}</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Write a value to a pin. Accepts <code class="inline">t:pid</code> or <code class="inline">t:pin_address</code> to identify pin.</p>
+
+  </section>
+</div>
+
+        </section>
+      
+
+      
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.18.1),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle"><span class="sr-only">Switch theme</span></button>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  <script src="dist/app-778c9ef903.js"></script>
+  
+  
+  
+  
+  </body>
+</html>
+
