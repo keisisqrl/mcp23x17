@@ -98,9 +98,7 @@ defmodule Mcp23x17.Utils do
       <<0x0e::8>>
   """
   @spec intfa() :: <<_::8>>
-  def intfa do
-    << 0x0e::8 >>
-  end
+  def intfa, do: << 0x0e::8 >>
 
   @doc """
   Address of IODIR for PORTA.
@@ -109,9 +107,7 @@ defmodule Mcp23x17.Utils do
       <<0x00::8>>
   """
   @spec iodir() :: <<_::8>>
-  def iodir do
-    << 0x00::8 >>
-  end
+  def iodir, do: << 0x00::8 >>
 
   @doc """
   Address of IOCON for PORTB during BANK=0 (boot).
@@ -120,9 +116,7 @@ defmodule Mcp23x17.Utils do
       << 0x0b::8 >>
   """
   @spec iocon() :: <<_::8>>
-  def iocon do
-    << 0x0b::8 >>
-  end
+  def iocon, do: << 0x0b::8 >>
 
   @doc """
   Address of INTCAPA for PORTA during BANK=0.
@@ -130,8 +124,7 @@ defmodule Mcp23x17.Utils do
       iex> Mcp23x17.Utils.intcapa
       << 0x10::8 >>
   """
-  def intcapa do
-    << 0x10::8 >>
-  end
+  @spec intcapa() :: <<_::8>>
+  def intcapa, do: << 0x10::8 >>
 
 end
